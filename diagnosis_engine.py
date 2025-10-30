@@ -3,14 +3,14 @@ from typing import List, Dict
 
 
 class AppTheme:
-    #Primary 
+    
     PRIMARY = "#2563EB"  
     PRIMARY_DARK = "#1E40AF"
     PRIMARY_LIGHT = "#3B82F6"
     PRIMARY_GRADIENT_START = "#2563EB"
     PRIMARY_GRADIENT_END = "#7C3AED"
     
-    #Accent 
+    
     ACCENT = "#8B5CF6"  
     ACCENT_TEAL = "#14B8A6"  
     ACCENT_EMERALD = "#10B981"
@@ -25,7 +25,6 @@ class AppTheme:
     SURFACE = "#F1F5F9" 
     CARD = "#FFFFFF"
     
-    # Text Hierarchy
     TEXT_PRIMARY = "#0F172A"  
     TEXT_SECONDARY = "#475569" 
     TEXT_TERTIARY = "#94A3B8" 
@@ -44,9 +43,8 @@ class AppTheme:
     SHADOW_STRONG = "#00000035"
 
 
-# ========================================
-# DATA LOADER
-# ========================================
+
+
 def load_diseases_data():
     """Load diseases data from JSON file"""
     try:
@@ -59,9 +57,6 @@ def load_diseases_data():
         }
 
 
-# ========================================
-# DIAGNOSIS ENGINE
-# ========================================
 class DiagnosisEngine:
     def __init__(self, diseases_data):
         self.diseases_data = diseases_data
@@ -75,10 +70,10 @@ class DiagnosisEngine:
         results = []
         
         for disease in self.diseases:
-            # Extract disease symptoms
+            
             disease_symptoms = [s['symptom'].lower() for s in disease['symptoms']]
             
-            # Calculate match score
+            
             matched = []
             for selected in selected_symptoms:
                 for disease_symptom in disease['symptoms']:
@@ -113,11 +108,9 @@ class DiagnosisEngine:
             return AppTheme.STATUS_SUCCESS
 
 
-# ========================================
-# RULE-BASED AI - SYMPTOM EXTRACTION
-# ========================================
 
-# Master symptom database with variations and keywords
+
+
 SYMPTOM_DATABASE = {
     "Diarrhea": ["diarrhea", "loose stool", "watery stool", "frequent stool", "runny stool", "upset stomach"],
     "Vomiting": ["vomit", "vomiting", "throwing up", "puke", "puking", "nausea and vomiting"],
@@ -145,7 +138,6 @@ SYMPTOM_DATABASE = {
     "Whitish tongue coating": ["white tongue", "coated tongue", "whitish tongue"]
 }
 
-# Common symptoms list for reference
 COMMON_SYMPTOMS = list(SYMPTOM_DATABASE.keys())
 
 
@@ -155,7 +147,7 @@ class SymptomExtractor:
     def __init__(self):
         self.symptom_db = SYMPTOM_DATABASE
         
-        # Severity modifiers
+
         self.mild_modifiers = [
             "mild", "slight", "slightly", "minor", "low-grade", "low grade",
             "little bit", "a bit", "bit of", "somewhat", "occasionally", "little"
@@ -165,7 +157,6 @@ class SymptomExtractor:
             "serious", "constant", "persistent", "chronic", "unbearable", "excruciating"
         ]
         
-        # Negations (exclude symptoms like "no fever")
         self.negations = ["no ", "not ", "without ", "denies ", "deny ", "never ", "lack of "]
     
     def extract_symptoms(self, text: str) -> List[str]:
@@ -179,7 +170,6 @@ class SymptomExtractor:
         text_lower = text.lower().strip()
         matched_symptoms: List[str] = []
         
-        # Split text into smaller segments for better local context
         segments: List[str] = []
         tmp = text_lower.replace(";", ",")
         tmp = tmp.replace(" and ", ",")
@@ -190,7 +180,6 @@ class SymptomExtractor:
         if not segments:
             segments = [text_lower]
         
-        # Match per segment with local severity/negation checks
         for segment in segments:
             for symptom, keywords in self.symptom_db.items():
                 for keyword in keywords:
@@ -198,7 +187,6 @@ class SymptomExtractor:
                         if self._is_negated(segment, keyword):
                             continue
                         if self._is_mild_symptom(segment, keyword):
-                            # explicitly ignore mild mentions
                             continue
                         if symptom not in matched_symptoms:
                             matched_symptoms.append(symptom)
@@ -223,7 +211,6 @@ class SymptomExtractor:
         end = min(len(text), pos + len(symptom_keyword) + 32)
         context = text[start:end]
         
-        # Mild close to the symptom
         for mild in self.mild_modifiers:
             if mild in context:
                 mpos = context.find(mild)
@@ -231,7 +218,6 @@ class SymptomExtractor:
                 if abs(mpos - kpos) < 22:
                     return True
         
-        # Severe overrides mild filtering
         for sev in self.severe_modifiers:
             if sev in context:
                 return False
@@ -246,8 +232,6 @@ class SymptomExtractor:
         text_lower = text.lower()
         keywords = self.symptom_db.get(symptom, [])
         
-        # Count keyword occurrences
         count = sum(1 for keyword in keywords if keyword in text_lower)
         
-        # Normalize to 0-1 score
         return min(count / len(keywords), 1.0) if keywords else 0.0

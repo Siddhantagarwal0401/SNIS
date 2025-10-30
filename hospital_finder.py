@@ -126,14 +126,13 @@ class HospitalFinder:
         """
         required_specs = self.get_specializations_for_disease(disease_name)
         
-        # Determine if we should apply distance filtering
-        # Only filter by distance if no specific city is selected or if all hospitals are close enough
+        
         apply_distance_filter = False
         if city:
             hospitals = self.filter_hospitals_by_city(city)
         else:
             hospitals = self.hospitals.copy()
-            apply_distance_filter = True  # Apply distance filter for nearby search
+            apply_distance_filter = True 
         
         hospitals = self.filter_hospitals_by_specialization(hospitals, required_specs)
         
@@ -148,7 +147,7 @@ class HospitalFinder:
                 result['distance_km'] = round(distance, 2)
                 result['travel_time'] = self.calculate_travel_time(distance)
                 
-                # Only filter by distance if we're doing a nearby search (no specific city selected)
+
                 if apply_distance_filter and distance > max_distance:
                     continue
             else:
@@ -173,15 +172,15 @@ class HospitalFinder:
         dest_lon = hospital.get('lon')
         
         if not dest_lat or not dest_lon:
-            # Fallback to address search
+            
             address = f"{hospital.get('address', '')}, {hospital.get('city', '')}"
             return f"https://www.google.com/maps/search/?api=1&query={address.replace(' ', '+')}"
         
         if user_coords:
-            # From user location to hospital
+            
             return f"https://www.google.com/maps/dir/{user_coords[0]},{user_coords[1]}/{dest_lat},{dest_lon}"
         else:
-            # Just hospital location
+            
             return f"https://www.google.com/maps/search/?api=1&query={dest_lat},{dest_lon}"
     
     def get_call_url(self, phone: str) -> str:
