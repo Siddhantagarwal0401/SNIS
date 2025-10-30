@@ -4,38 +4,27 @@ from typing import List, Dict
 from pages import *
 from diagnosis_engine import DiagnosisEngine
 
-# ========================================
-# MAIN APP
-# ========================================
 def main(page: ft.Page):
-    # Page configuration - Mobile-first
     page.title = "WaterWise - Water-borne Disease Detection"
     page.theme_mode = ft.ThemeMode.LIGHT
     page.padding = 0
     page.scroll = None
-    
-    # Window sizing for better mobile simulation
     page.window_width = 420
     page.window_height = 800
     page.window_resizable = True
-    
-    # Mobile optimizations
     page.fonts = {
         "Inter": "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
     }
     page.theme = ft.Theme(font_family="Inter")
     
-    # Load disease data
     diseases_data = load_diseases_data()
     diagnosis_engine = DiagnosisEngine(diseases_data)
     
-    # App state
     app_state = {
         'selected_symptoms': [],
         'diagnosis_result': None
     }
     
-    # Navigation function
     def navigate_to(route):
         page.controls.clear()
         
@@ -54,7 +43,6 @@ def main(page: ft.Page):
         
         page.update()
     
-    # Start with home page
     navigate_to("home")
 
 if __name__ == "__main__":

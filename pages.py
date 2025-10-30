@@ -3,9 +3,7 @@ from flet import Icons
 from diagnosis_engine import AppTheme, COMMON_SYMPTOMS, load_diseases_data, SymptomExtractor
 from hospital_finder import HospitalFinder
 
-# ========================================
-# PAGE 1: WELCOME SCREEN
-# ========================================
+
 def create_welcome_page(page: ft.Page, navigate_to):
     """Professional medical-grade welcome page"""
     
@@ -16,7 +14,7 @@ def create_welcome_page(page: ft.Page, navigate_to):
             controls=[
                 ft.Container(height=60),
                 
-                # Sleek hero section
+            
                 ft.Container(
                     content=ft.Column([
                         # Minimalist icon
@@ -1361,6 +1359,7 @@ def create_hospital_finder_page(page: ft.Page, navigate_to, app_state):
     def create_hospital_card(hospital: dict):
         """Create a professional hospital card"""
         distance = hospital.get('distance_km')
+        travel_time = hospital.get('travel_time')
         
         return ft.Container(
             content=ft.Column([
@@ -1381,7 +1380,10 @@ def create_hospital_finder_page(page: ft.Page, navigate_to, app_state):
                     ft.Text(f"{hospital.get('rating', 'N/A')}/5.0", size=13, weight=ft.FontWeight.W_600),
                     ft.Container(width=10),
                     ft.Icon(Icons.LOCATION_ON, size=16, color=AppTheme.STATUS_CRITICAL),
-                    ft.Text(f"{distance:.1f} km" if distance else "N/A", size=13, weight=ft.FontWeight.W_600)
+                    ft.Text(f"{distance:.1f} km" if distance else "N/A", size=13, weight=ft.FontWeight.W_600),
+                    ft.Container(width=6),
+                    ft.Icon(Icons.ACCESS_TIME, size=16, color=AppTheme.ACCENT),
+                    ft.Text(travel_time if travel_time else "N/A", size=13, weight=ft.FontWeight.W_600, color=AppTheme.ACCENT)
                 ], spacing=6),
                 ft.Container(height=4),
                 ft.Row([

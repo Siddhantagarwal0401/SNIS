@@ -3,9 +3,6 @@ from typing import List, Dict, Tuple, Optional
 from geopy.distance import geodesic
 import geocoder
 
-# ========================================
-# HOSPITAL FINDER ENGINE
-# ========================================
 
 class HospitalFinder:
     """Rule-based hospital finder with location detection and filtering"""
@@ -54,6 +51,28 @@ class HospitalFinder:
             print(f"Distance calculation error: {e}")
             return float('inf')
     
+    def calculate_travel_time(self, distance_km: float, avg_speed_kmh: float = 30.0) -> str:
+        """
+        Calculate estimated travel time based on distance
+        Uses average city traffic speed of 30 km/h by default
+        Returns formatted time string (e.g., "15 mins", "1 hr 20 mins")
+        """
+        if distance_km is None or distance_km == float('inf'):
+            return "N/A"
+        
+        time_hours = distance_km / avg_speed_kmh
+        time_minutes = time_hours * 60
+        
+        if time_minutes < 60:
+            return f"{int(time_minutes)} mins"
+        else:
+            hours = int(time_minutes // 60)
+            minutes = int(time_minutes % 60)
+            if minutes > 0:
+                return f"{hours} hr {minutes} mins"
+            else:
+                return f"{hours} hr"
+    
     def filter_hospitals_by_city(self, city: str) -> List[Dict]:
         """Filter hospitals by city name"""
         if not city:
@@ -81,7 +100,6 @@ class HospitalFinder:
         
         for hospital in hospitals:
             hospital_specs = [s.lower() for s in hospital.get('specializations', [])]
-            # Check if any required specialization matches
             if any(spec in hospital_specs for spec in spec_lower):
                 filtered.append(hospital)
         
@@ -100,25 +118,25 @@ class HospitalFinder:
             disease_name: Detected disease name
             user_coords: (lat, lon) tuple or None for automatic detection
             city: City name for filtering
-            max_distance: Maximum distance in km
+            max_distance: Maximum distance in km (only applied if city matches user's city)
             sort_by: 'distance' or 'rating'
         
         Returns:
             List of hospitals with distance info
         """
-        # Get relevant specializations
         required_specs = self.get_specializations_for_disease(disease_name)
         
-        # Filter by city first
+        # Determine if we should apply distance filtering
+        # Only filter by distance if no specific city is selected or if all hospitals are close enough
+        apply_distance_filter = False
         if city:
             hospitals = self.filter_hospitals_by_city(city)
         else:
             hospitals = self.hospitals.copy()
+            apply_distance_filter = True  # Apply distance filter for nearby search
         
-        # Filter by specialization
         hospitals = self.filter_hospitals_by_specialization(hospitals, required_specs)
         
-        # Calculate distances if coordinates available
         results = []
         for hospital in hospitals:
             hospital_coords = (hospital.get('lat'), hospital.get('lon'))
@@ -128,16 +146,18 @@ class HospitalFinder:
             if user_coords and hospital_coords[0] and hospital_coords[1]:
                 distance = self.calculate_distance(user_coords, hospital_coords)
                 result['distance_km'] = round(distance, 2)
+                result['travel_time'] = self.calculate_travel_time(distance)
                 
-                # Filter by max distance
-                if distance > max_distance:
+                # Only filter by distance if we're doing a nearby search (no specific city selected)
+                if apply_distance_filter and distance > max_distance:
                     continue
             else:
                 result['distance_km'] = None
+                result['travel_time'] = None
             
             results.append(result)
+                
         
-        # Sort results
         if sort_by == "distance" and user_coords:
             results.sort(key=lambda x: x.get('distance_km', float('inf')))
         elif sort_by == "rating":

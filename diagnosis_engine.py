@@ -1,46 +1,42 @@
 import json
 from typing import List, Dict
 
-# ========================================
-# PROFESSIONAL COLOR THEME
-# ========================================
+
 class AppTheme:
-    # Primary - Medical Blue Palette
-    PRIMARY = "#2563EB"  # Professional Blue
+    #Primary 
+    PRIMARY = "#2563EB"  
     PRIMARY_DARK = "#1E40AF"
     PRIMARY_LIGHT = "#3B82F6"
     PRIMARY_GRADIENT_START = "#2563EB"
     PRIMARY_GRADIENT_END = "#7C3AED"
     
-    # Accent Colors
-    ACCENT = "#8B5CF6"  # Purple accent
-    ACCENT_TEAL = "#14B8A6"  # Teal
+    #Accent 
+    ACCENT = "#8B5CF6"  
+    ACCENT_TEAL = "#14B8A6"  
     ACCENT_EMERALD = "#10B981"
-    
-    # Medical Status Colors
     STATUS_CRITICAL = "#DC2626"
     STATUS_WARNING = "#F59E0B"
     STATUS_SUCCESS = "#10B981"
     STATUS_INFO = "#3B82F6"
     
-    # Neutral Palette
+
     WHITE = "#FFFFFF"
-    BACKGROUND = "#F8FAFC"  # Slate-50
-    SURFACE = "#F1F5F9"  # Slate-100
+    BACKGROUND = "#F8FAFC" 
+    SURFACE = "#F1F5F9" 
     CARD = "#FFFFFF"
     
     # Text Hierarchy
-    TEXT_PRIMARY = "#0F172A"  # Slate-900
-    TEXT_SECONDARY = "#475569"  # Slate-600
-    TEXT_TERTIARY = "#94A3B8"  # Slate-400
-    TEXT_DISABLED = "#CBD5E1"  # Slate-300
+    TEXT_PRIMARY = "#0F172A"  
+    TEXT_SECONDARY = "#475569" 
+    TEXT_TERTIARY = "#94A3B8" 
+    TEXT_DISABLED = "#CBD5E1" 
     
-    # Borders & Dividers
-    BORDER = "#E2E8F0"  # Slate-200
+  
+    BORDER = "#E2E8F0" 
     BORDER_FOCUS = "#2563EB"
     DIVIDER = "#F1F5F9"
     
-    # Shadows (premium depth)
+    
     SHADOW_SM = "#0000000A"
     SHADOW_MD = "#00000012"
     SHADOW_LG = "#0000001A"
@@ -127,7 +123,11 @@ SYMPTOM_DATABASE = {
     "Vomiting": ["vomit", "vomiting", "throwing up", "puke", "puking", "nausea and vomiting"],
     "Nausea": ["nausea", "nauseous", "queasy", "sick feeling", "feel sick"],
     "Fever": ["fever", "high temperature", "hot", "burning up", "temperature", "febrile"],
-    "Dehydration": ["dehydration", "dehydrated", "thirsty", "dry mouth", "dizzy"],
+    "Dehydration": [
+        "dehydration", "dehydrated", "thirsty", "dry mouth", "dizzy",
+        "dizziness", "lightheaded", "light-headed", "light headed",
+        "dry lips", "sunken eyes"
+    ],
     "Stomach cramps": ["stomach cramp", "stomach pain", "belly pain", "abdominal cramp", "tummy ache"],
     "Abdominal pain": ["abdominal pain", "stomach ache", "belly ache", "gut pain"],
     "Bloating": ["bloat", "bloating", "swollen belly", "gas", "gassy", "distended"],
@@ -150,53 +150,93 @@ COMMON_SYMPTOMS = list(SYMPTOM_DATABASE.keys())
 
 
 class SymptomExtractor:
-    """Rule-based AI for extracting symptoms from natural language text"""
+    """Intelligent rule-based extractor with severity and negation awareness"""
     
     def __init__(self):
         self.symptom_db = SYMPTOM_DATABASE
+        
+        # Severity modifiers
+        self.mild_modifiers = [
+            "mild", "slight", "slightly", "minor", "low-grade", "low grade",
+            "little bit", "a bit", "bit of", "somewhat", "occasionally", "little"
+        ]
+        self.severe_modifiers = [
+            "severe", "intense", "extreme", "very bad", "terrible", "awful",
+            "serious", "constant", "persistent", "chronic", "unbearable", "excruciating"
+        ]
+        
+        # Negations (exclude symptoms like "no fever")
+        self.negations = ["no ", "not ", "without ", "denies ", "deny ", "never ", "lack of "]
     
     def extract_symptoms(self, text: str) -> List[str]:
         """
-        Extract symptoms from user input text using rule-based matching
-        Returns list of matched symptom names
+        Extract symptoms with severity & negation filtering.
+        Filters out clearly mild or negated symptom mentions.
         """
         if not text:
             return []
         
-        # Normalize input
         text_lower = text.lower().strip()
-        matched_symptoms = []
+        matched_symptoms: List[str] = []
         
-        # Rule 1: Direct keyword matching
-        for symptom, keywords in self.symptom_db.items():
-            for keyword in keywords:
-                if keyword in text_lower:
-                    if symptom not in matched_symptoms:
-                        matched_symptoms.append(symptom)
-                    break
+        # Split text into smaller segments for better local context
+        segments: List[str] = []
+        tmp = text_lower.replace(";", ",")
+        tmp = tmp.replace(" and ", ",")
+        for part in tmp.split(","):
+            p = part.strip()
+            if p:
+                segments.append(p)
+        if not segments:
+            segments = [text_lower]
         
-        # Rule 2: Handle common phrases
-        # "I have X" or "I'm experiencing X"
-        phrases = [
-            "i have", "i've got", "i am experiencing", "i'm experiencing",
-            "suffering from", "feeling", "i feel", "having"
-        ]
-        
-        for phrase in phrases:
-            if phrase in text_lower:
-                # Additional context-based extraction
-                parts = text_lower.split(phrase)
-                if len(parts) > 1:
-                    symptom_part = parts[1].split('.')[0].split(',')[0].strip()
-                    # Check this part against keywords
-                    for symptom, keywords in self.symptom_db.items():
-                        for keyword in keywords:
-                            if keyword in symptom_part:
-                                if symptom not in matched_symptoms:
-                                    matched_symptoms.append(symptom)
-                                break
+        # Match per segment with local severity/negation checks
+        for segment in segments:
+            for symptom, keywords in self.symptom_db.items():
+                for keyword in keywords:
+                    if keyword in segment:
+                        if self._is_negated(segment, keyword):
+                            continue
+                        if self._is_mild_symptom(segment, keyword):
+                            # explicitly ignore mild mentions
+                            continue
+                        if symptom not in matched_symptoms:
+                            matched_symptoms.append(symptom)
+                        break
         
         return matched_symptoms
+    
+    def _is_negated(self, text: str, symptom_keyword: str) -> bool:
+        """Return True if a negation appears near the symptom mention."""
+        pos = text.find(symptom_keyword)
+        if pos == -1:
+            return False
+        window = text[max(0, pos - 25):pos + len(symptom_keyword)]
+        return any(n in window for n in self.negations)
+    
+    def _is_mild_symptom(self, text: str, symptom_keyword: str) -> bool:
+        """Return True if the symptom appears with a mild-intensity modifier nearby."""
+        pos = text.find(symptom_keyword)
+        if pos == -1:
+            return False
+        start = max(0, pos - 32)
+        end = min(len(text), pos + len(symptom_keyword) + 32)
+        context = text[start:end]
+        
+        # Mild close to the symptom
+        for mild in self.mild_modifiers:
+            if mild in context:
+                mpos = context.find(mild)
+                kpos = context.find(symptom_keyword)
+                if abs(mpos - kpos) < 22:
+                    return True
+        
+        # Severe overrides mild filtering
+        for sev in self.severe_modifiers:
+            if sev in context:
+                return False
+        
+        return False
     
     def get_symptom_confidence(self, text: str, symptom: str) -> float:
         """
