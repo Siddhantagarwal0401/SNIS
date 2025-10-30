@@ -1,0 +1,299 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "lastUpdated": "2025-10-30",
+    "totalDiseases": 5,
+    "categories": ["waterborne", "bacterial", "parasitic", "viral"]
+  },
+  "diseases": [
+    {
+      "id": "cholera_001",
+      "name": "Cholera",
+      "category": "bacterial",
+      "severity": "critical",
+      "transmission": "waterborne",
+      "symptoms": [
+        {
+          "symptom": "Watery diarrhea",
+          "severity": "high"
+        },
+        {
+          "symptom": "Vomiting",
+          "severity": "high"
+        },
+        {
+          "symptom": "Leg cramps",
+          "severity": "medium"
+        },
+        {
+          "symptom": "Rapid dehydration",
+          "severity": "critical"
+        }
+      ],
+      "homeRemedies": [
+        {
+          "remedy": "Oral rehydration solution",
+          "instructions": "Mix 6 tsp sugar + 0.5 tsp salt in 1 L boiled water",
+          "frequency": "Every 2-3 hours"
+        },
+        {
+          "remedy": "Probiotic yogurt",
+          "instructions": "2-3 cups daily",
+          "frequency": "Daily"
+        },
+        {
+          "remedy": "Ginger juice with mint and holy basil",
+          "instructions": "Mix fresh ginger juice with mint leaves and holy basil",
+          "frequency": "2-3 times daily"
+        },
+        {
+          "remedy": "Coconut water with lime juice",
+          "instructions": "Fresh coconut water with few drops of lime",
+          "frequency": "Throughout the day"
+        },
+        {
+          "remedy": "Onion paste with black pepper",
+          "instructions": "Mix crushed onion with black pepper powder",
+          "frequency": "Once daily"
+        },
+        {
+          "remedy": "Clove tea",
+          "instructions": "Boil cloves in water and strain",
+          "frequency": "2 times daily"
+        },
+        {
+          "remedy": "Black herbal tea",
+          "instructions": "Brew black tea without milk",
+          "frequency": "2-3 times daily"
+        }
+      ],
+      "consultDoctor": {
+        "required": true,
+        "urgency": "immediate",
+        "reason": "Immediate doctor consultation required due to risk of severe dehydration and death if untreated."
+      }
+    },
+    {
+      "id": "typhoid_002",
+      "name": "Typhoid",
+      "category": "bacterial",
+      "severity": "high",
+      "transmission": "waterborne",
+      "symptoms": [
+        {
+          "symptom": "High fever",
+          "severity": "high"
+        },
+        {
+          "symptom": "Headache",
+          "severity": "medium"
+        },
+        {
+          "symptom": "Abdominal pain",
+          "severity": "high"
+        },
+        {
+          "symptom": "Diarrhea or constipation",
+          "severity": "medium"
+        },
+        {
+          "symptom": "Rash",
+          "severity": "low"
+        }
+      ],
+      "homeRemedies": [
+        {
+          "remedy": "Boiled water and clear fluids",
+          "instructions": "Drink plenty of boiled water and clear fluids",
+          "frequency": "Throughout the day"
+        },
+        {
+          "remedy": "Light digestible foods",
+          "instructions": "Rice porridge and bananas",
+          "frequency": "Small meals every 3-4 hours"
+        }
+      ],
+      "consultDoctor": {
+        "required": true,
+        "urgency": "high",
+        "reason": "Essential, as antibiotics are required. Seek urgent care if abdominal pain is severe or if bleeding occurs."
+      }
+    },
+    {
+      "id": "giardiasis_003",
+      "name": "Giardiasis",
+      "category": "parasitic",
+      "severity": "medium",
+      "transmission": "waterborne",
+      "symptoms": [
+        {
+          "symptom": "Greasy stools",
+          "severity": "medium"
+        },
+        {
+          "symptom": "Stomach cramps",
+          "severity": "medium"
+        },
+        {
+          "symptom": "Bloating",
+          "severity": "low"
+        },
+        {
+          "symptom": "Fatigue",
+          "severity": "medium"
+        }
+      ],
+      "homeRemedies": [
+        {
+          "remedy": "Hydration",
+          "instructions": "Water and oral rehydration solution",
+          "frequency": "Every 2-3 hours"
+        },
+        {
+          "remedy": "Isabgol with curd",
+          "instructions": "Psyllium husk with curd for binding stools",
+          "frequency": "Twice daily"
+        },
+        {
+          "remedy": "Dietary restriction",
+          "instructions": "Avoid dairy except probiotic yogurt",
+          "frequency": "Throughout treatment"
+        }
+      ],
+      "consultDoctor": {
+        "required": true,
+        "urgency": "medium",
+        "condition": "If symptoms last >1 week or dehydration develops",
+        "reason": "See a doctor if symptoms persist, worsen, or for children/elderly due to risk of dehydration."
+      }
+    },
+    {
+      "id": "amoebiasis_004",
+      "name": "Amoebiasis (Amoebic Dysentery)",
+      "category": "parasitic",
+      "severity": "high",
+      "transmission": "waterborne",
+      "symptoms": [
+        {
+          "symptom": "Loose stools (sometimes bloody/mucus)",
+          "severity": "high"
+        },
+        {
+          "symptom": "Abdominal cramps",
+          "severity": "medium"
+        },
+        {
+          "symptom": "Appetite loss",
+          "severity": "medium"
+        },
+        {
+          "symptom": "Whitish tongue coating",
+          "severity": "low"
+        }
+      ],
+      "homeRemedies": [
+        {
+          "remedy": "Lemon juice",
+          "instructions": "Fresh lemon juice in warm water",
+          "frequency": "2-3 times daily"
+        },
+        {
+          "remedy": "Bael fruit pulp",
+          "instructions": "Consume fresh bael fruit pulp",
+          "frequency": "Once daily"
+        },
+        {
+          "remedy": "Nutmeg powder",
+          "instructions": "Mix nutmeg powder in water",
+          "frequency": "Once daily"
+        },
+        {
+          "remedy": "Neem leaf paste",
+          "instructions": "Grind neem leaves into paste",
+          "frequency": "Once daily"
+        },
+        {
+          "remedy": "Isabgol with curd",
+          "instructions": "Psyllium husk with curd",
+          "frequency": "Twice daily"
+        }
+      ],
+      "consultDoctor": {
+        "required": true,
+        "urgency": "high",
+        "condition": "Especially for severe cases",
+        "reason": "Essential; antibiotics may be required. Untreated cases can cause complications or death."
+      }
+    },
+    {
+      "id": "hepatitis_a_005",
+      "name": "Hepatitis A",
+      "category": "viral",
+      "severity": "high",
+      "transmission": "waterborne",
+      "symptoms": [
+        {
+          "symptom": "Fatigue",
+          "severity": "medium"
+        },
+        {
+          "symptom": "Jaundice (yellowing skin/eyes)",
+          "severity": "high"
+        },
+        {
+          "symptom": "Nausea",
+          "severity": "medium"
+        },
+        {
+          "symptom": "Vomiting",
+          "severity": "medium"
+        },
+        {
+          "symptom": "Abdominal pain",
+          "severity": "medium"
+        },
+        {
+          "symptom": "Dark urine",
+          "severity": "high"
+        },
+        {
+          "symptom": "Loss of appetite",
+          "severity": "medium"
+        }
+      ],
+      "homeRemedies": [
+        {
+          "remedy": "Rest",
+          "instructions": "Adequate bed rest",
+          "frequency": "Daily until recovery"
+        },
+        {
+          "remedy": "Hydration",
+          "instructions": "Plenty of fluids - fruit juice, water",
+          "frequency": "Throughout the day"
+        },
+        {
+          "remedy": "Light meals",
+          "instructions": "Easily digestible meals",
+          "frequency": "Small portions every 3-4 hours"
+        },
+        {
+          "remedy": "Avoid alcohol",
+          "instructions": "Complete abstinence from alcohol and heavy medications",
+          "frequency": "Throughout treatment"
+        },
+        {
+          "remedy": "Ayurvedic herbs",
+          "instructions": "Amla, Giloy, Bhumi Amla for liver support",
+          "frequency": "As per Ayurvedic practitioner guidance"
+        }
+      ],
+      "consultDoctor": {
+        "required": true,
+        "urgency": "high",
+        "condition": "If jaundice is pronounced or persistent vomiting/diarrhea",
+        "reason": "Usually recovers without specific medication, but supportive care and monitoring required for complications."
+      }
+    }
+  ]
+}
