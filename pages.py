@@ -1,194 +1,203 @@
 import flet as ft
 from flet import Icons
 from diagnosis_engine import AppTheme, COMMON_SYMPTOMS, load_diseases_data, SymptomExtractor
+from hospital_finder import HospitalFinder
 
 # ========================================
 # PAGE 1: WELCOME SCREEN
 # ========================================
 def create_welcome_page(page: ft.Page, navigate_to):
-    """Create the welcome/home page with modern design"""
+    """Professional medical-grade welcome page"""
+    
+    screen_width = page.width if page.width else 420
     
     return ft.Container(
         content=ft.Column(
             controls=[
-                # Spacer
-                ft.Container(height=40),
+                ft.Container(height=60),
                 
-                # Hero section with logo
+                # Sleek hero section
                 ft.Container(
                     content=ft.Column([
-                        # Animated icon container
+                        # Minimalist icon
                         ft.Container(
                             content=ft.Icon(
-                                name=Icons.WATER_DROP,
-                                size=100,
+                                name=Icons.WATER_DROP_ROUNDED,
+                                size=72,
                                 color=AppTheme.WHITE
                             ),
-                            width=140,
-                            height=140,
-                            bgcolor=AppTheme.PRIMARY_TEAL,
-                            border_radius=70,
+                            width=120,
+                            height=120,
+                            bgcolor=AppTheme.PRIMARY,
+                            border_radius=28,
                             shadow=ft.BoxShadow(
-                                spread_radius=8,
-                                blur_radius=25,
-                                color=AppTheme.PRIMARY_TEAL + "40",
-                                offset=ft.Offset(0, 8)
+                                spread_radius=0,
+                                blur_radius=40,
+                                color=AppTheme.SHADOW_XL,
+                                offset=ft.Offset(0, 12)
                             ),
                             alignment=ft.alignment.center
                         ),
-                        ft.Container(height=20),
+                        ft.Container(height=28),
                         ft.Text(
                             "WaterWise",
-                            size=48,
+                            size=38,
                             weight=ft.FontWeight.BOLD,
                             color=AppTheme.TEXT_PRIMARY,
                             text_align=ft.TextAlign.CENTER,
                         ),
-                        ft.Container(height=5),
-                        ft.Text(
-                            "Early Detection of Water-Borne Diseases",
-                            size=17,
-                            color=AppTheme.TEXT_SECONDARY,
-                            text_align=ft.TextAlign.CENTER,
-                            weight=ft.FontWeight.W_500
-                        ),
-                        ft.Container(height=5),
-                        ft.Text(
-                            "AI-powered symptom analysis for your health",
-                            size=14,
-                            color=AppTheme.TEXT_MUTED,
-                            text_align=ft.TextAlign.CENTER,
+                        ft.Container(height=10),
+                        ft.Container(
+                            content=ft.Text(
+                                "Advanced water-borne disease detection and nearby medical facility finder",
+                                size=14,
+                                color=AppTheme.TEXT_SECONDARY,
+                                text_align=ft.TextAlign.CENTER,
+                                weight=ft.FontWeight.W_500
+                            ),
+                            padding=ft.padding.symmetric(horizontal=40)
                         ),
                     ],
                     horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                     spacing=0
                     ),
-                    padding=ft.padding.only(bottom=40),
+                    padding=ft.padding.only(bottom=45),
                 ),
                 
-                # Main CTA Buttons with cards
+                # Professional action cards
                 ft.Container(
                     content=ft.Column([
-                        # Primary CTA
+                        # Primary action
                         ft.Container(
                             content=ft.ElevatedButton(
                                 content=ft.Row([
-                                    ft.Icon(Icons.MEDICAL_SERVICES_ROUNDED, size=28, color=AppTheme.WHITE),
-                                    ft.Text("Start Diagnosis", size=19, weight=ft.FontWeight.BOLD)
+                                    ft.Icon(Icons.BLOODTYPE_ROUNDED, size=24, color=AppTheme.WHITE),
+                                    ft.Text("Start Diagnosis", size=17, weight=ft.FontWeight.W_600)
                                 ],
                                 alignment=ft.MainAxisAlignment.CENTER,
                                 spacing=12
                                 ),
-                                width=320,
-                                height=65,
-                                bgcolor=AppTheme.PRIMARY_TEAL,
+                                width=min(screen_width - 48, 380),
+                                height=60,
+                                bgcolor=AppTheme.PRIMARY,
                                 color=AppTheme.WHITE,
-                                elevation=8,
+                                elevation=0,
                                 on_click=lambda _: navigate_to("symptoms"),
                                 style=ft.ButtonStyle(
-                                    shape=ft.RoundedRectangleBorder(radius=16),
-                                    overlay_color=AppTheme.PRIMARY_TEAL_DARK
+                                    shape=ft.RoundedRectangleBorder(radius=16)
                                 )
                             ),
                             shadow=ft.BoxShadow(
-                                spread_radius=1,
-                                blur_radius=20,
-                                color=AppTheme.PRIMARY_TEAL + "35",
+                                spread_radius=0,
+                                blur_radius=30,
+                                color=AppTheme.SHADOW_LG,
                                 offset=ft.Offset(0, 8)
                             )
                         ),
                         
-                        # Secondary CTA
-                        ft.Container(
-                            content=ft.Container(
+                        ft.Container(height=16),
+                        
+                        # Secondary actions
+                        ft.Row([
+                            ft.Container(
                                 content=ft.TextButton(
-                                    content=ft.Row([
-                                        ft.Icon(Icons.LIGHTBULB_ROUNDED, size=24, color=AppTheme.PRIMARY_TEAL),
-                                        ft.Text("Learn Prevention Tips", size=17, weight=ft.FontWeight.W_600, color=AppTheme.PRIMARY_TEAL)
+                                    content=ft.Column([
+                                        ft.Container(
+                                            content=ft.Icon(Icons.HEALTH_AND_SAFETY_ROUNDED, size=32, color=AppTheme.PRIMARY),
+                                            width=56,
+                                            height=56,
+                                            bgcolor=AppTheme.PRIMARY + "15",
+                                            border_radius=14,
+                                            alignment=ft.alignment.center
+                                        ),
+                                        ft.Container(height=10),
+                                        ft.Text("Prevention", size=13, weight=ft.FontWeight.W_600, color=AppTheme.TEXT_PRIMARY)
                                     ],
-                                    alignment=ft.MainAxisAlignment.CENTER,
-                                    spacing=10
+                                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                                    spacing=0
                                     ),
-                                    width=320,
-                                    height=60,
                                     on_click=lambda _: navigate_to("learn"),
                                     style=ft.ButtonStyle(
-                                        shape=ft.RoundedRectangleBorder(radius=16),
-                                        bgcolor=AppTheme.SOFT_GRAY,
-                                        overlay_color=AppTheme.LIGHT_AQUA
+                                        shape=ft.RoundedRectangleBorder(radius=18),
+                                        bgcolor=AppTheme.CARD,
+                                        padding=ft.padding.all(18)
                                     )
                                 ),
-                                border_radius=16,
-                            )
-                        ),
-                        
-                        # Tertiary link
-                        ft.Container(
-                            content=ft.TextButton(
-                                content=ft.Row([
-                                    ft.Icon(Icons.INFO_ROUNDED, size=20, color=AppTheme.TEXT_SECONDARY),
-                                    ft.Text("About WaterWise", size=15, color=AppTheme.TEXT_SECONDARY)
-                                ],
-                                alignment=ft.MainAxisAlignment.CENTER,
-                                spacing=8
+                                shadow=ft.BoxShadow(
+                                    spread_radius=0,
+                                    blur_radius=20,
+                                    color=AppTheme.SHADOW_MD,
+                                    offset=ft.Offset(0, 4)
                                 ),
-                                on_click=lambda _: navigate_to("about"),
-                                style=ft.ButtonStyle(
-                                    overlay_color=AppTheme.LIGHT_AQUA
-                                )
+                                border_radius=18,
+                                expand=True
                             ),
-                            padding=ft.padding.only(top=5)
+                            
+                            ft.Container(width=14),
+                            
+                            ft.Container(
+                                content=ft.TextButton(
+                                    content=ft.Column([
+                                        ft.Container(
+                                            content=ft.Icon(Icons.INFO_ROUNDED, size=32, color=AppTheme.ACCENT),
+                                            width=56,
+                                            height=56,
+                                            bgcolor=AppTheme.ACCENT + "15",
+                                            border_radius=14,
+                                            alignment=ft.alignment.center
+                                        ),
+                                        ft.Container(height=10),
+                                        ft.Text("About", size=13, weight=ft.FontWeight.W_600, color=AppTheme.TEXT_PRIMARY)
+                                    ],
+                                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                                    spacing=0
+                                    ),
+                                    on_click=lambda _: navigate_to("about"),
+                                    style=ft.ButtonStyle(
+                                        shape=ft.RoundedRectangleBorder(radius=18),
+                                        bgcolor=AppTheme.CARD,
+                                        padding=ft.padding.all(18)
+                                    )
+                                ),
+                                shadow=ft.BoxShadow(
+                                    spread_radius=0,
+                                    blur_radius=20,
+                                    color=AppTheme.SHADOW_MD,
+                                    offset=ft.Offset(0, 4)
+                                ),
+                                border_radius=18,
+                                expand=True
+                            ),
+                        ],
+                        alignment=ft.MainAxisAlignment.CENTER
                         ),
                     ],
                     horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                    spacing=18
+                    spacing=0
                     ),
-                    padding=20
+                    padding=ft.padding.symmetric(horizontal=24)
                 ),
                 
-                # Spacer
                 ft.Container(expand=True),
                 
-                # Footer
+                # Minimal footer
                 ft.Container(
-                    content=ft.Column([
-                        ft.Container(
-                            content=ft.Row([
-                                ft.Icon(Icons.VERIFIED_ROUNDED, size=16, color=AppTheme.TEXT_MUTED),
-                                ft.Text(
-                                    "Built for Hackathon 2025",
-                                    size=13,
-                                    color=AppTheme.TEXT_MUTED,
-                                    weight=ft.FontWeight.W_500
-                                )
-                            ],
-                            alignment=ft.MainAxisAlignment.CENTER,
-                            spacing=6
-                            )
-                        ),
-                        ft.Text(
-                            "Version 1.0",
-                            size=11,
-                            color=AppTheme.TEXT_MUTED,
-                            text_align=ft.TextAlign.CENTER,
-                        )
+                    content=ft.Row([
+                        ft.Icon(Icons.VERIFIED_USER_ROUNDED, size=16, color=AppTheme.TEXT_TERTIARY),
+                        ft.Text("Trusted Medical Information", size=12, color=AppTheme.TEXT_TERTIARY, weight=ft.FontWeight.W_500)
                     ],
-                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                    spacing=4
+                    alignment=ft.MainAxisAlignment.CENTER,
+                    spacing=6
                     ),
-                    padding=ft.padding.only(bottom=25)
+                    padding=ft.padding.only(bottom=24)
                 )
             ],
             horizontal_alignment=ft.CrossAxisAlignment.CENTER,
             spacing=0
         ),
-        gradient=ft.LinearGradient(
-            begin=ft.alignment.top_left,
-            end=ft.alignment.bottom_right,
-            colors=[AppTheme.LIGHT_AQUA, AppTheme.WHITE, AppTheme.SOFT_GRAY]
-        ),
+        bgcolor=AppTheme.BACKGROUND,
         expand=True,
-        padding=20
+        padding=0
     )
 
 
@@ -196,23 +205,32 @@ def create_welcome_page(page: ft.Page, navigate_to):
 # PAGE 2: AI-POWERED SYMPTOM INPUT PAGE
 # ========================================
 def create_symptom_input_page(page: ft.Page, navigate_to, app_state):
-    """Create AI-powered symptom input page with natural language processing"""
+    """Create AI-powered symptom input page with professional mobile UX"""
     
     symptom_extractor = SymptomExtractor()
     extracted_symptoms = []
     
-    # Text input field
+    # Responsive sizing
+    screen_width = page.width if page.width else 420
+    
+    # Professional text input field
     symptom_input = ft.TextField(
-        label="Describe your symptoms",
         hint_text="E.g., 'I have watery diarrhea, vomiting, and feeling very weak'",
         multiline=True,
-        min_lines=4,
-        max_lines=6,
-        border_color=AppTheme.PRIMARY_TEAL,
-        focused_border_color=AppTheme.PRIMARY_TEAL_DARK,
-        text_size=16,
-        bgcolor=AppTheme.WHITE,
+        min_lines=6,
+        max_lines=9,
+        border_color=AppTheme.BORDER,
+        focused_border_color=AppTheme.PRIMARY,
+        text_size=14,
+        bgcolor=AppTheme.CARD,
         border_radius=12,
+        border_width=1.5,
+        content_padding=16,
+        cursor_color=AppTheme.PRIMARY,
+        text_style=ft.TextStyle(
+            weight=ft.FontWeight.W_400,
+            color=AppTheme.TEXT_PRIMARY
+        )
     )
     
     # Detected symptoms display
@@ -222,9 +240,9 @@ def create_symptom_input_page(page: ft.Page, navigate_to, app_state):
     )
     
     ai_status_text = ft.Text(
-        "AI will analyze your text and extract symptoms automatically",
-        size=13,
-        color=AppTheme.TEXT_MUTED,
+        "Analysis will extract symptoms from your description",
+        size=12,
+        color=AppTheme.TEXT_TERTIARY,
         italic=True
     )
     
@@ -234,7 +252,7 @@ def create_symptom_input_page(page: ft.Page, navigate_to, app_state):
         if not text or not text.strip():
             page.snack_bar = ft.SnackBar(
                 content=ft.Text("Please describe your symptoms"),
-                bgcolor=AppTheme.URGENCY_MEDIUM
+                bgcolor=AppTheme.STATUS_WARNING
             )
             page.snack_bar.open = True
             page.update()
@@ -245,33 +263,54 @@ def create_symptom_input_page(page: ft.Page, navigate_to, app_state):
         extracted_symptoms.extend(symptom_extractor.extract_symptoms(text))
         
         if not extracted_symptoms:
-            ai_status_text.value = "❌ No symptoms detected. Try being more specific (e.g., 'fever', 'diarrhea', 'vomiting')"
-            ai_status_text.color = AppTheme.URGENCY_HIGH
+            ai_status_text.value = "No symptoms detected. Try being more specific (e.g., 'fever', 'diarrhea', 'vomiting')"
+            ai_status_text.color = AppTheme.STATUS_WARNING
             detected_symptoms_column.controls.clear()
         else:
-            ai_status_text.value = f"✅ AI detected {len(extracted_symptoms)} symptom(s)"
-            ai_status_text.color = AppTheme.URGENCY_LOW
+            ai_status_text.value = f"Found {len(extracted_symptoms)} symptom(s) from your description"
+            ai_status_text.color = AppTheme.STATUS_SUCCESS
             
-            # Display detected symptoms
+            # Display detected symptoms with professional cards
             detected_symptoms_column.controls.clear()
-            for symptom in extracted_symptoms:
+            for idx, symptom in enumerate(extracted_symptoms):
                 detected_symptoms_column.controls.append(
                     ft.Container(
                         content=ft.Row([
-                            ft.Icon(Icons.CHECK_CIRCLE_ROUNDED, size=20, color=AppTheme.URGENCY_LOW),
+                            ft.Container(
+                                content=ft.Text(
+                                    str(idx + 1),
+                                    size=12,
+                                    weight=ft.FontWeight.BOLD,
+                                    color=AppTheme.WHITE
+                                ),
+                                width=26,
+                                height=26,
+                                bgcolor=AppTheme.STATUS_SUCCESS,
+                                border_radius=13,
+                                alignment=ft.alignment.center
+                            ),
                             ft.Text(
                                 symptom,
                                 size=15,
-                                weight=ft.FontWeight.W_500,
-                                color=AppTheme.TEXT_PRIMARY
-                            )
+                                weight=ft.FontWeight.W_600,
+                                color=AppTheme.TEXT_PRIMARY,
+                                expand=True
+                            ),
+                            ft.Icon(Icons.CHECK_CIRCLE, size=20, color=AppTheme.STATUS_SUCCESS),
                         ],
-                        spacing=10
+                        spacing=12,
+                        vertical_alignment=ft.CrossAxisAlignment.CENTER
                         ),
-                        bgcolor=AppTheme.LIGHT_GREEN,
+                        bgcolor=AppTheme.CARD,
                         padding=12,
                         border_radius=10,
-                        border=ft.border.all(1, AppTheme.URGENCY_LOW + "40")
+                        border=ft.border.all(1, AppTheme.BORDER),
+                        shadow=ft.BoxShadow(
+                            spread_radius=0,
+                            blur_radius=12,
+                            color=AppTheme.SHADOW_SM,
+                            offset=ft.Offset(0, 2)
+                        )
                     )
                 )
         
@@ -282,7 +321,7 @@ def create_symptom_input_page(page: ft.Page, navigate_to, app_state):
         if not extracted_symptoms:
             page.snack_bar = ft.SnackBar(
                 content=ft.Text("Please analyze your symptoms first using the AI button"),
-                bgcolor=AppTheme.URGENCY_HIGH
+                bgcolor=AppTheme.STATUS_CRITICAL
             )
             page.snack_bar.open = True
             page.update()
@@ -294,125 +333,125 @@ def create_symptom_input_page(page: ft.Page, navigate_to, app_state):
     
     return ft.Container(
         content=ft.Column([
-            # Modern Header
+            # Clean header
             ft.Container(
                 content=ft.Row([
                     ft.IconButton(
                         icon=Icons.ARROW_BACK_ROUNDED,
                         icon_color=AppTheme.WHITE,
-                        icon_size=28,
-                        on_click=lambda _: navigate_to("home"),
-                        style=ft.ButtonStyle(
-                            overlay_color=AppTheme.PRIMARY_TEAL_DARK
-                        )
+                        icon_size=26,
+                        on_click=lambda _: navigate_to("home")
                     ),
                     ft.Text(
-                        "Describe Your Symptoms",
-                        size=22,
-                        weight=ft.FontWeight.BOLD,
+                        "Symptom Assessment",
+                        size=20,
+                        weight=ft.FontWeight.W_600,
                         color=AppTheme.WHITE
                     )
                 ],
-                spacing=8
+                spacing=4
                 ),
-                bgcolor=AppTheme.PRIMARY_TEAL,
-                padding=18,
+                bgcolor=AppTheme.PRIMARY,
+                padding=ft.padding.symmetric(horizontal=16, vertical=14),
                 shadow=ft.BoxShadow(
                     spread_radius=0,
-                    blur_radius=12,
-                    color=AppTheme.SHADOW_MEDIUM,
-                    offset=ft.Offset(0, 3)
+                    blur_radius=20,
+                    color=AppTheme.SHADOW_MD,
+                    offset=ft.Offset(0, 4)
                 )
             ),
             
             # Main content area
             ft.Container(
                 content=ft.Column([
-                    # AI Badge
-                    ft.Container(
-                        content=ft.Row([
-                            ft.Icon(Icons.PSYCHOLOGY_ROUNDED, size=24, color=AppTheme.ACCENT_BLUE),
-                            ft.Text(
-                                "Rule-Based AI Symptom Analyzer",
-                                size=16,
-                                weight=ft.FontWeight.BOLD,
-                                color=AppTheme.TEXT_PRIMARY
-                            )
-                        ],
-                        spacing=10
-                        ),
-                        bgcolor=AppTheme.LIGHT_AQUA,
-                        padding=15,
-                        border_radius=12,
-                        border=ft.border.all(2, AppTheme.ACCENT_BLUE + "40")
-                    ),
-                    
-                    ft.Container(height=20),
-                    
-                    # Instructions
+                    # Professional instructions
                     ft.Container(
                         content=ft.Column([
                             ft.Text(
-                                "💬 Tell us how you're feeling",
-                                size=17,
-                                weight=ft.FontWeight.BOLD,
+                                "Describe your symptoms",
+                                size=18,
+                                weight=ft.FontWeight.W_600,
                                 color=AppTheme.TEXT_PRIMARY
                             ),
-                            ft.Container(height=5),
+                            ft.Container(height=6),
                             ft.Text(
-                                "Type in natural language and our AI will identify the symptoms automatically.",
-                                size=14,
-                                color=AppTheme.TEXT_SECONDARY
+                                "Provide a detailed description of how you're feeling. Be specific about severity, duration, and any relevant details.",
+                                size=13,
+                                color=AppTheme.TEXT_SECONDARY,
+                                weight=ft.FontWeight.W_500
                             )
-                        ])
+                        ]),
+                        padding=ft.padding.only(bottom=4)
                     ),
                     
-                    ft.Container(height=15),
+                    ft.Container(height=16),
                     
-                    # Text input
-                    symptom_input,
+                    # Text input with shadow
+                    ft.Container(
+                        content=symptom_input,
+                        shadow=ft.BoxShadow(
+                            spread_radius=0,
+                            blur_radius=12,
+                            color=AppTheme.SHADOW_SM,
+                            offset=ft.Offset(0, 3)
+                        ),
+                        border_radius=14
+                    ),
                     
-                    ft.Container(height=15),
+                    ft.Container(height=18),
                     
                     # Analyze button
                     ft.Container(
                         content=ft.ElevatedButton(
                             content=ft.Row([
-                                ft.Icon(Icons.AUTO_FIX_HIGH_ROUNDED, size=24, color=AppTheme.WHITE),
-                                ft.Text("Analyze with AI", size=17, weight=ft.FontWeight.BOLD)
+                                ft.Icon(Icons.ANALYTICS_ROUNDED, size=22, color=AppTheme.WHITE),
+                                ft.Text("Analyze Symptoms", size=16, weight=ft.FontWeight.W_600)
                             ],
                             alignment=ft.MainAxisAlignment.CENTER,
                             spacing=10
                             ),
-                            width=340,
-                            height=56,
-                            bgcolor=AppTheme.ACCENT_BLUE,
+                            width=min(screen_width - 40, 400),
+                            height=54,
+                            bgcolor=AppTheme.ACCENT,
                             color=AppTheme.WHITE,
-                            elevation=6,
+                            elevation=0,
                             on_click=analyze_symptoms,
                             style=ft.ButtonStyle(
-                                shape=ft.RoundedRectangleBorder(radius=14),
+                                shape=ft.RoundedRectangleBorder(radius=14)
                             )
                         ),
                         shadow=ft.BoxShadow(
                             spread_radius=0,
-                            blur_radius=15,
-                            color=AppTheme.ACCENT_BLUE + "35",
-                            offset=ft.Offset(0, 5)
+                            blur_radius=24,
+                            color=AppTheme.SHADOW_LG,
+                            offset=ft.Offset(0, 6)
                         )
                     ),
                     
-                    ft.Container(height=15),
+                    ft.Container(height=18),
                     
                     # Status text
-                    ai_status_text,
-                    
-                    ft.Container(height=10),
-                    
-                    # Detected symptoms area
                     ft.Container(
-                        content=detected_symptoms_column,
-                        padding=5
+                        content=ai_status_text,
+                        padding=ft.padding.symmetric(horizontal=2)
+                    ),
+                    
+                    ft.Container(height=12),
+                    
+                    # Detected symptoms area with header
+                    ft.Container(
+                        content=ft.Column([
+                            ft.Text(
+                                "Detected Symptoms",
+                                size=14,
+                                weight=ft.FontWeight.BOLD,
+                                color=AppTheme.TEXT_PRIMARY
+                            ) if extracted_symptoms else ft.Container(height=0),
+                            detected_symptoms_column
+                        ],
+                        spacing=12
+                        ),
+                        padding=ft.padding.only(top=4)
                     ),
                     
                 ],
@@ -420,7 +459,7 @@ def create_symptom_input_page(page: ft.Page, navigate_to, app_state):
                 ),
                 expand=True,
                 padding=20,
-                bgcolor=AppTheme.OFF_WHITE
+                bgcolor=AppTheme.BACKGROUND
             ),
             
             # Diagnosis button at bottom
@@ -428,32 +467,32 @@ def create_symptom_input_page(page: ft.Page, navigate_to, app_state):
                 content=ft.Container(
                     content=ft.ElevatedButton(
                         content=ft.Row([
-                            ft.Icon(Icons.BIOTECH_ROUNDED, size=26, color=AppTheme.WHITE),
-                            ft.Text("Get Diagnosis", size=18, weight=ft.FontWeight.BOLD)
+                            ft.Icon(Icons.BIOTECH_ROUNDED, size=24, color=AppTheme.WHITE),
+                            ft.Text("Get Diagnosis", size=16, weight=ft.FontWeight.W_600, color=AppTheme.WHITE)
                         ],
                         alignment=ft.MainAxisAlignment.CENTER,
-                        spacing=12
+                        spacing=10
                         ),
-                        width=360,
-                        height=62,
-                        bgcolor=AppTheme.PRIMARY_TEAL,
+                        width=min(screen_width - 36, 400),
+                        height=56,
+                        bgcolor=AppTheme.PRIMARY,
                         color=AppTheme.WHITE,
-                        elevation=8,
+                        elevation=0,
                         on_click=on_detect_click,
                         style=ft.ButtonStyle(
-                            shape=ft.RoundedRectangleBorder(radius=16),
-                            overlay_color=AppTheme.PRIMARY_TEAL_DARK
+                            shape=ft.RoundedRectangleBorder(radius=14)
                         )
                     ),
                     shadow=ft.BoxShadow(
-                        spread_radius=1,
-                        blur_radius=20,
-                        color=AppTheme.PRIMARY_TEAL + "35",
-                        offset=ft.Offset(0, 6)
+                        spread_radius=0,
+                        blur_radius=28,
+                        color=AppTheme.SHADOW_LG,
+                        offset=ft.Offset(0, 8)
                     )
                 ),
-                padding=18,
-                bgcolor=AppTheme.WHITE
+                padding=16,
+                bgcolor=AppTheme.CARD,
+                border=ft.border.only(top=ft.BorderSide(1, AppTheme.DIVIDER))
             )
         ],
         spacing=0,
@@ -490,12 +529,12 @@ def create_result_page(page: ft.Page, navigate_to, app_state, diagnosis_engine):
                             color=AppTheme.WHITE
                         )
                     ]),
-                    bgcolor=AppTheme.PRIMARY_TEAL,
+                    bgcolor=AppTheme.PRIMARY,
                     padding=15
                 ),
                 ft.Container(
                     content=ft.Column([
-                        ft.Icon(Icons.INFO_OUTLINE, size=80, color=AppTheme.DEEP_BLUE),
+                        ft.Icon(Icons.INFO_OUTLINE, size=80, color=AppTheme.PRIMARY_DARK),
                         ft.Text(
                             "No Match Found",
                             size=24,
@@ -509,7 +548,7 @@ def create_result_page(page: ft.Page, navigate_to, app_state, diagnosis_engine):
                         ),
                         ft.ElevatedButton(
                             "Try Again",
-                            bgcolor=AppTheme.PRIMARY_TEAL,
+                            bgcolor=AppTheme.PRIMARY,
                             color=AppTheme.WHITE,
                             on_click=lambda _: navigate_to("symptoms")
                         )
@@ -555,7 +594,7 @@ def create_result_page(page: ft.Page, navigate_to, app_state, diagnosis_engine):
                     icon_size=28,
                     on_click=lambda _: navigate_to("symptoms"),
                     style=ft.ButtonStyle(
-                        overlay_color=AppTheme.PRIMARY_TEAL_DARK
+                        overlay_color=AppTheme.PRIMARY_DARK
                     )
                 ),
                 ft.Text(
@@ -567,12 +606,12 @@ def create_result_page(page: ft.Page, navigate_to, app_state, diagnosis_engine):
             ],
             spacing=8
             ),
-            bgcolor=AppTheme.PRIMARY_TEAL,
+            bgcolor=AppTheme.PRIMARY,
             padding=18,
             shadow=ft.BoxShadow(
                 spread_radius=0,
                 blur_radius=12,
-                color=AppTheme.SHADOW_MEDIUM,
+                color=AppTheme.SHADOW_MD,
                 offset=ft.Offset(0, 3)
             )
         ),
@@ -587,7 +626,7 @@ def create_result_page(page: ft.Page, navigate_to, app_state, diagnosis_engine):
                             ft.Icon(
                                 Icons.CORONAVIRUS_ROUNDED,
                                 size=40,
-                                color=AppTheme.PRIMARY_TEAL
+                                color=AppTheme.PRIMARY
                             ),
                             ft.Column([
                                 ft.Text(
@@ -599,7 +638,7 @@ def create_result_page(page: ft.Page, navigate_to, app_state, diagnosis_engine):
                                 ft.Text(
                                     f"{disease.get('category', 'Disease').capitalize()} | {disease.get('severity', 'Unknown').capitalize()}",
                                     size=13,
-                                    color=AppTheme.TEXT_MUTED,
+                                    color=AppTheme.TEXT_TERTIARY,
                                     weight=ft.FontWeight.W_500
                                 )
                             ],
@@ -624,7 +663,7 @@ def create_result_page(page: ft.Page, navigate_to, app_state, diagnosis_engine):
                                         f"{confidence}%",
                                         size=18,
                                         weight=ft.FontWeight.BOLD,
-                                        color=AppTheme.PRIMARY_TEAL
+                                        color=AppTheme.PRIMARY
                                     )
                                 ],
                                 alignment=ft.MainAxisAlignment.SPACE_BETWEEN
@@ -632,13 +671,13 @@ def create_result_page(page: ft.Page, navigate_to, app_state, diagnosis_engine):
                                 ft.Container(height=8),
                                 ft.ProgressBar(
                                     value=confidence / 100,
-                                    color=AppTheme.PRIMARY_TEAL,
-                                    bgcolor=AppTheme.SOFT_GRAY,
+                                    color=AppTheme.PRIMARY,
+                                    bgcolor=AppTheme.BORDER,
                                     height=8,
                                     border_radius=4
                                 )
                             ]),
-                            bgcolor=AppTheme.LIGHT_AQUA,
+                            bgcolor=AppTheme.SURFACE,
                             padding=15,
                             border_radius=12
                         ),
@@ -675,11 +714,11 @@ def create_result_page(page: ft.Page, navigate_to, app_state, diagnosis_engine):
                     bgcolor=AppTheme.WHITE,
                     padding=24,
                     border_radius=16,
-                    border=ft.border.all(1, AppTheme.SOFT_GRAY),
+                    border=ft.border.all(1, AppTheme.BORDER),
                     shadow=ft.BoxShadow(
                         spread_radius=0,
                         blur_radius=15,
-                        color=AppTheme.SHADOW_MEDIUM,
+                        color=AppTheme.SHADOW_MD,
                         offset=ft.Offset(0, 4)
                     )
                 ),
@@ -688,7 +727,7 @@ def create_result_page(page: ft.Page, navigate_to, app_state, diagnosis_engine):
                 ft.Container(
                     content=ft.Column([
                         ft.Row([
-                            ft.Icon(Icons.CHECK_CIRCLE_ROUNDED, size=24, color=AppTheme.URGENCY_LOW),
+                            ft.Icon(Icons.CHECK_CIRCLE_ROUNDED, size=24, color=AppTheme.STATUS_SUCCESS),
                             ft.Text(
                                 "Matched Symptoms",
                                 size=18,
@@ -702,7 +741,7 @@ def create_result_page(page: ft.Page, navigate_to, app_state, diagnosis_engine):
                         ft.Column([
                             ft.Container(
                                 content=ft.Row([
-                                    ft.Icon(Icons.CIRCLE, size=8, color=AppTheme.PRIMARY_TEAL),
+                                    ft.Icon(Icons.CIRCLE, size=8, color=AppTheme.PRIMARY),
                                     ft.Text(
                                         s['symptom'],
                                         size=15,
@@ -722,11 +761,11 @@ def create_result_page(page: ft.Page, navigate_to, app_state, diagnosis_engine):
                     bgcolor=AppTheme.WHITE,
                     padding=20,
                     border_radius=14,
-                    border=ft.border.all(1, AppTheme.SOFT_GRAY),
+                    border=ft.border.all(1, AppTheme.BORDER),
                     shadow=ft.BoxShadow(
                         spread_radius=0,
                         blur_radius=10,
-                        color=AppTheme.SHADOW_COLOR,
+                        color=AppTheme.SHADOW_SM,
                         offset=ft.Offset(0, 3)
                     )
                 ),
@@ -738,7 +777,7 @@ def create_result_page(page: ft.Page, navigate_to, app_state, diagnosis_engine):
                             "🏠 Home Remedies",
                             size=18,
                             weight=ft.FontWeight.BOLD,
-                            color=AppTheme.DEEP_BLUE
+                            color=AppTheme.PRIMARY_DARK
                         ),
                         ft.Column([
                             ft.Container(
@@ -756,11 +795,11 @@ def create_result_page(page: ft.Page, navigate_to, app_state, diagnosis_engine):
                                         f"Frequency: {remedy['frequency']}",
                                         size=12,
                                         italic=True,
-                                        color=AppTheme.DEEP_BLUE
+                                        color=AppTheme.PRIMARY_DARK
                                     )
                                 ]),
                                 border=ft.border.only(
-                                    left=ft.BorderSide(3, AppTheme.CYAN_HIGHLIGHT)
+                                    left=ft.BorderSide(3, AppTheme.ACCENT_TEAL)
                                 ),
                                 padding=ft.padding.only(left=10, top=5, bottom=5)
                             )
@@ -773,7 +812,7 @@ def create_result_page(page: ft.Page, navigate_to, app_state, diagnosis_engine):
                     shadow=ft.BoxShadow(
                         spread_radius=2,
                         blur_radius=5,
-                        color=AppTheme.SHADOW_COLOR
+                        color=AppTheme.SHADOW_SM
                     )
                 ),
                 
@@ -784,7 +823,7 @@ def create_result_page(page: ft.Page, navigate_to, app_state, diagnosis_engine):
                             "👨‍⚕️ When to See a Doctor",
                             size=18,
                             weight=ft.FontWeight.BOLD,
-                            color=AppTheme.DEEP_BLUE
+                            color=AppTheme.PRIMARY_DARK
                         ),
                         ft.Text(
                             consult_info.get('reason', 'Consult a doctor if symptoms persist.'),
@@ -794,7 +833,7 @@ def create_result_page(page: ft.Page, navigate_to, app_state, diagnosis_engine):
                             consult_info.get('condition', ''),
                             size=13,
                             italic=True,
-                            color=AppTheme.DEEP_BLUE
+                            color=AppTheme.PRIMARY_DARK
                         ) if consult_info.get('condition') else ft.Container()
                     ]),
                     bgcolor=AppTheme.WHITE,
@@ -803,42 +842,71 @@ def create_result_page(page: ft.Page, navigate_to, app_state, diagnosis_engine):
                     shadow=ft.BoxShadow(
                         spread_radius=2,
                         blur_radius=5,
-                        color=AppTheme.SHADOW_COLOR
+                        color=AppTheme.SHADOW_SM
                     )
                 ),
                 
                 # Action buttons
                 ft.Container(
                     content=ft.Column([
+                        # Find Hospitals button - Primary action
                         ft.ElevatedButton(
                             content=ft.Row([
-                                ft.Icon(Icons.REFRESH, size=20),
+                                ft.Icon(Icons.LOCAL_HOSPITAL_ROUNDED, size=22, color=AppTheme.WHITE),
+                                ft.Text("Find Nearby Hospitals", size=17, weight=ft.FontWeight.BOLD)
+                            ],
+                            alignment=ft.MainAxisAlignment.CENTER,
+                            spacing=10
+                            ),
+                            width=320,
+                            height=58,
+                            bgcolor=AppTheme.STATUS_CRITICAL,
+                            color=AppTheme.WHITE,
+                            elevation=6,
+                            on_click=lambda _: (
+                                app_state.update({'detected_disease': disease['name']}),
+                                navigate_to("hospitals")
+                            ),
+                            style=ft.ButtonStyle(
+                                shape=ft.RoundedRectangleBorder(radius=14)
+                            )
+                        ),
+                        ft.ElevatedButton(
+                            content=ft.Row([
+                                ft.Icon(Icons.REFRESH_ROUNDED, size=20),
                                 ft.Text("Restart Diagnosis", size=16)
                             ],
                             alignment=ft.MainAxisAlignment.CENTER,
                             spacing=10
                             ),
-                            width=300,
-                            height=50,
-                            bgcolor=AppTheme.PRIMARY_TEAL,
+                            width=320,
+                            height=52,
+                            bgcolor=AppTheme.PRIMARY,
                             color=AppTheme.WHITE,
-                            on_click=lambda _: navigate_to("home")
+                            on_click=lambda _: navigate_to("home"),
+                            style=ft.ButtonStyle(
+                                shape=ft.RoundedRectangleBorder(radius=12)
+                            )
                         ),
                         ft.OutlinedButton(
                             content=ft.Row([
-                                ft.Icon(Icons.LIGHTBULB_OUTLINE, size=20),
-                                ft.Text("Learn Prevention Tips", size=16)
+                                ft.Icon(Icons.LIGHTBULB_ROUNDED, size=20, color=AppTheme.PRIMARY),
+                                ft.Text("Learn Prevention Tips", size=15, color=AppTheme.PRIMARY)
                             ],
                             alignment=ft.MainAxisAlignment.CENTER,
                             spacing=10
                             ),
-                            width=300,
+                            width=320,
                             height=50,
-                            on_click=lambda _: navigate_to("learn")
+                            on_click=lambda _: navigate_to("learn"),
+                            style=ft.ButtonStyle(
+                                shape=ft.RoundedRectangleBorder(radius=12),
+                                side=ft.BorderSide(2, AppTheme.PRIMARY)
+                            )
                         )
                     ],
                     horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                    spacing=15
+                    spacing=12
                     ),
                     padding=ft.padding.only(top=20, bottom=20)
                 )
@@ -848,7 +916,7 @@ def create_result_page(page: ft.Page, navigate_to, app_state, diagnosis_engine):
             ),
             expand=True,
             padding=15,
-            bgcolor=AppTheme.OFF_WHITE
+            bgcolor=AppTheme.BACKGROUND
         )
     ]
     
@@ -892,7 +960,7 @@ def create_learn_page(page: ft.Page, navigate_to):
                         color=AppTheme.WHITE
                     )
                 ]),
-                bgcolor=AppTheme.PRIMARY_TEAL,
+                bgcolor=AppTheme.PRIMARY,
                 padding=15
             ),
             
@@ -905,20 +973,20 @@ def create_learn_page(page: ft.Page, navigate_to):
                             ft.Icon(
                                 Icons.HEALTH_AND_SAFETY,
                                 size=60,
-                                color=AppTheme.PRIMARY_TEAL
+                                color=AppTheme.PRIMARY
                             ),
                             ft.Text(
                                 "Why Water Safety Matters",
                                 size=22,
                                 weight=ft.FontWeight.BOLD,
-                                color=AppTheme.DEEP_BLUE,
+                                color=AppTheme.PRIMARY_DARK,
                                 text_align=ft.TextAlign.CENTER
                             ),
                             ft.Text(
                                 "Water-borne diseases affect millions globally each year. Simple prevention steps can save lives.",
                                 size=14,
                                 text_align=ft.TextAlign.CENTER,
-                                color=AppTheme.DEEP_BLUE
+                                color=AppTheme.PRIMARY_DARK
                             )
                         ],
                         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
@@ -930,7 +998,7 @@ def create_learn_page(page: ft.Page, navigate_to):
                         shadow=ft.BoxShadow(
                             spread_radius=2,
                             blur_radius=5,
-                            color=AppTheme.SHADOW_COLOR
+                            color=AppTheme.SHADOW_SM
                         )
                     ),
                     
@@ -939,7 +1007,7 @@ def create_learn_page(page: ft.Page, navigate_to):
                         "💧 Prevention Guidelines",
                         size=20,
                         weight=ft.FontWeight.BOLD,
-                        color=AppTheme.DEEP_BLUE
+                        color=AppTheme.PRIMARY_DARK
                     ),
                     
                     # Tips cards
@@ -949,7 +1017,7 @@ def create_learn_page(page: ft.Page, navigate_to):
                                 ft.Icon(
                                     tip['icon'],
                                     size=30,
-                                    color=AppTheme.PRIMARY_TEAL
+                                    color=AppTheme.PRIMARY
                                 ),
                                 ft.Text(
                                     tip['tip'],
@@ -962,11 +1030,11 @@ def create_learn_page(page: ft.Page, navigate_to):
                             bgcolor=AppTheme.WHITE,
                             padding=15,
                             border_radius=8,
-                            border=ft.border.all(2, AppTheme.CYAN_HIGHLIGHT),
+                            border=ft.border.all(2, AppTheme.ACCENT_TEAL),
                             shadow=ft.BoxShadow(
                                 spread_radius=1,
                                 blur_radius=3,
-                                color=AppTheme.SHADOW_COLOR
+                                color=AppTheme.SHADOW_SM
                             )
                         )
                         for tip in prevention_tips
@@ -981,7 +1049,7 @@ def create_learn_page(page: ft.Page, navigate_to):
                                 "📊 Quick Facts",
                                 size=18,
                                 weight=ft.FontWeight.BOLD,
-                                color=AppTheme.DEEP_BLUE
+                                color=AppTheme.PRIMARY_DARK
                             ),
                             ft.Text(
                                 "• Over 2 billion people lack access to safe drinking water",
@@ -1000,10 +1068,10 @@ def create_learn_page(page: ft.Page, navigate_to):
                                 size=13
                             )
                         ]),
-                        bgcolor=AppTheme.LIGHT_GREEN,
+                        bgcolor=AppTheme.SURFACE,
                         padding=15,
                         border_radius=10,
-                        border=ft.border.all(2, AppTheme.URGENCY_LOW)
+                        border=ft.border.all(2, AppTheme.STATUS_SUCCESS)
                     ),
                     
                     # Action buttons
@@ -1013,7 +1081,7 @@ def create_learn_page(page: ft.Page, navigate_to):
                                 content=ft.Text("Start Diagnosis", size=16, weight=ft.FontWeight.BOLD),
                                 width=280,
                                 height=50,
-                                bgcolor=AppTheme.PRIMARY_TEAL,
+                                bgcolor=AppTheme.PRIMARY,
                                 color=AppTheme.WHITE,
                                 on_click=lambda _: navigate_to("symptoms")
                             ),
@@ -1033,7 +1101,7 @@ def create_learn_page(page: ft.Page, navigate_to):
                 ),
                 expand=True,
                 padding=15,
-                bgcolor=AppTheme.OFF_WHITE
+                bgcolor=AppTheme.BACKGROUND
             )
         ],
         spacing=0,
@@ -1043,7 +1111,7 @@ def create_learn_page(page: ft.Page, navigate_to):
         gradient=ft.LinearGradient(
             begin=ft.alignment.top_center,
             end=ft.alignment.bottom_center,
-            colors=[AppTheme.LIGHT_GREEN, AppTheme.WHITE]
+            colors=[AppTheme.SURFACE, AppTheme.WHITE]
         )
     )
 
@@ -1071,7 +1139,7 @@ def create_about_page(page: ft.Page, navigate_to):
                         color=AppTheme.WHITE
                     )
                 ]),
-                bgcolor=AppTheme.PRIMARY_TEAL,
+                bgcolor=AppTheme.PRIMARY,
                 padding=15
             ),
             
@@ -1084,18 +1152,18 @@ def create_about_page(page: ft.Page, navigate_to):
                             ft.Icon(
                                 Icons.WATER_DROP,
                                 size=100,
-                                color=AppTheme.PRIMARY_TEAL
+                                color=AppTheme.PRIMARY
                             ),
                             ft.Text(
                                 "WaterWise",
                                 size=32,
                                 weight=ft.FontWeight.BOLD,
-                                color=AppTheme.PRIMARY_TEAL
+                                color=AppTheme.PRIMARY
                             ),
                             ft.Text(
                                 "Version 1.0",
                                 size=14,
-                                color=AppTheme.DEEP_BLUE,
+                                color=AppTheme.PRIMARY_DARK,
                                 italic=True
                             )
                         ],
@@ -1112,7 +1180,7 @@ def create_about_page(page: ft.Page, navigate_to):
                                 "About This App",
                                 size=20,
                                 weight=ft.FontWeight.BOLD,
-                                color=AppTheme.DEEP_BLUE
+                                color=AppTheme.PRIMARY_DARK
                             ),
                             ft.Text(
                                 "WaterWise is a rule-based AI application designed for early detection "
@@ -1128,7 +1196,7 @@ def create_about_page(page: ft.Page, navigate_to):
                         shadow=ft.BoxShadow(
                             spread_radius=2,
                             blur_radius=5,
-                            color=AppTheme.SHADOW_COLOR
+                            color=AppTheme.SHADOW_SM
                         )
                     ),
                     
@@ -1139,7 +1207,7 @@ def create_about_page(page: ft.Page, navigate_to):
                                 "✨ Features",
                                 size=18,
                                 weight=ft.FontWeight.BOLD,
-                                color=AppTheme.DEEP_BLUE
+                                color=AppTheme.PRIMARY_DARK
                             ),
                             ft.Text("• Symptom-based disease detection", size=14),
                             ft.Text("• Home remedy suggestions", size=14),
@@ -1153,19 +1221,19 @@ def create_about_page(page: ft.Page, navigate_to):
                         shadow=ft.BoxShadow(
                             spread_radius=2,
                             blur_radius=5,
-                            color=AppTheme.SHADOW_COLOR
+                            color=AppTheme.SHADOW_SM
                         )
                     ),
                     
                     # Disclaimer
                     ft.Container(
                         content=ft.Column([
-                            ft.Icon(Icons.WARNING_AMBER, size=40, color=AppTheme.URGENCY_MEDIUM),
+                            ft.Icon(Icons.WARNING_AMBER, size=40, color=AppTheme.STATUS_WARNING),
                             ft.Text(
                                 "Important Disclaimer",
                                 size=16,
                                 weight=ft.FontWeight.BOLD,
-                                color=AppTheme.DEEP_BLUE,
+                                color=AppTheme.PRIMARY_DARK,
                                 text_align=ft.TextAlign.CENTER
                             ),
                             ft.Text(
@@ -1179,10 +1247,10 @@ def create_about_page(page: ft.Page, navigate_to):
                         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                         spacing=10
                         ),
-                        bgcolor=AppTheme.OFF_WHITE,
+                        bgcolor=AppTheme.BACKGROUND,
                         padding=20,
                         border_radius=10,
-                        border=ft.border.all(2, AppTheme.URGENCY_MEDIUM)
+                        border=ft.border.all(2, AppTheme.STATUS_WARNING)
                     ),
                     
                     # Credits
@@ -1192,7 +1260,7 @@ def create_about_page(page: ft.Page, navigate_to):
                                 "Credits",
                                 size=16,
                                 weight=ft.FontWeight.BOLD,
-                                color=AppTheme.DEEP_BLUE
+                                color=AppTheme.PRIMARY_DARK
                             ),
                             ft.Text(
                                 "Developed for Hackathon 2025",
@@ -1216,7 +1284,7 @@ def create_about_page(page: ft.Page, navigate_to):
                             content=ft.Text("Back to Home", size=16, weight=ft.FontWeight.BOLD),
                             width=250,
                             height=50,
-                            bgcolor=AppTheme.PRIMARY_TEAL,
+                            bgcolor=AppTheme.PRIMARY,
                             color=AppTheme.WHITE,
                             on_click=lambda _: navigate_to("home")
                         ),
@@ -1229,11 +1297,215 @@ def create_about_page(page: ft.Page, navigate_to):
                 ),
                 expand=True,
                 padding=15,
-                bgcolor=AppTheme.OFF_WHITE
+                bgcolor=AppTheme.BACKGROUND
             )
         ],
         spacing=0,
         expand=True
         ),
+        expand=True
+    )
+
+
+# ========================================
+# PAGE 6: HOSPITAL FINDER PAGE
+# ========================================
+def create_hospital_finder_page(page: ft.Page, navigate_to, app_state):
+    """Create hospital finder page with location-based search"""
+    
+    hospital_finder = HospitalFinder()
+    screen_width = page.width if page.width else 420
+    
+    # Get disease from app state
+    disease_name = app_state.get('detected_disease', 'General')
+    
+    # Try to get automatic location
+    user_location = None
+    user_city = None
+    location_data = hospital_finder.get_user_location()
+    if location_data:
+        user_location = (location_data[0], location_data[1])
+        user_city = location_data[2]
+    
+    # City dropdown
+    cities = hospital_finder.get_cities_list()
+    city_dropdown = ft.Dropdown(
+        label="Select City",
+        options=[ft.dropdown.Option(city) for city in cities],
+        value=user_city if user_city in cities else (cities[0] if cities else None),
+        width=min(screen_width - 40, 360),
+        border_color=AppTheme.PRIMARY,
+        text_size=14,
+        border_radius=12
+    )
+    
+    # Sort dropdown
+    sort_dropdown = ft.Dropdown(
+        label="Sort By",
+        options=[
+            ft.dropdown.Option("distance", "Distance"),
+            ft.dropdown.Option("rating", "Rating")
+        ],
+        value="distance" if user_location else "rating",
+        width=min((screen_width - 60) / 2, 170),
+        text_size=13,
+        border_radius=10
+    )
+    
+    # Hospital list column
+    hospitals_column = ft.Column(controls=[], spacing=12, scroll=ft.ScrollMode.AUTO)
+    
+    # Status text
+    status_text = ft.Text("", size=13, color=AppTheme.TEXT_TERTIARY, italic=True)
+    
+    def create_hospital_card(hospital: dict):
+        """Create a professional hospital card"""
+        distance = hospital.get('distance_km')
+        
+        return ft.Container(
+            content=ft.Column([
+                ft.Row([
+                    ft.Container(
+                        content=ft.Icon(Icons.LOCAL_HOSPITAL_ROUNDED, size=24, color=AppTheme.WHITE),
+                        width=45, height=45, bgcolor=AppTheme.PRIMARY,
+                        border_radius=12, alignment=ft.alignment.center
+                    ),
+                    ft.Column([
+                        ft.Text(hospital['name'], size=16, weight=ft.FontWeight.BOLD, color=AppTheme.TEXT_PRIMARY),
+                        ft.Text(hospital.get('type', 'Hospital'), size=12, color=AppTheme.TEXT_TERTIARY)
+                    ], spacing=2, expand=True)
+                ], spacing=12),
+                ft.Container(height=8),
+                ft.Row([
+                    ft.Icon(Icons.STAR_ROUNDED, size=16, color=AppTheme.STATUS_WARNING),
+                    ft.Text(f"{hospital.get('rating', 'N/A')}/5.0", size=13, weight=ft.FontWeight.W_600),
+                    ft.Container(width=10),
+                    ft.Icon(Icons.LOCATION_ON, size=16, color=AppTheme.STATUS_CRITICAL),
+                    ft.Text(f"{distance:.1f} km" if distance else "N/A", size=13, weight=ft.FontWeight.W_600)
+                ], spacing=6),
+                ft.Container(height=4),
+                ft.Row([
+                    ft.Icon(Icons.PLACE_ROUNDED, size=14, color=AppTheme.TEXT_TERTIARY),
+                    ft.Text(hospital.get('address', ''), size=12, color=AppTheme.TEXT_SECONDARY, expand=True)
+                ], spacing=6),
+                ft.Container(
+                    content=ft.Row([
+                        ft.Icon(Icons.MEDICAL_SERVICES, size=14, color=AppTheme.ACCENT),
+                        ft.Text(", ".join(hospital.get('specializations', [])[:2]), size=11,
+                               color=AppTheme.ACCENT, weight=ft.FontWeight.W_500, expand=True)
+                    ], spacing=6),
+                    bgcolor=AppTheme.SURFACE, padding=8, border_radius=8, margin=ft.margin.only(top=8)
+                ),
+                ft.Container(height=8),
+                ft.Row([
+                    ft.ElevatedButton(
+                        content=ft.Row([ft.Icon(Icons.CALL, size=18, color=AppTheme.WHITE),
+                                       ft.Text("Call", size=13, weight=ft.FontWeight.BOLD)],
+                                      spacing=6, alignment=ft.MainAxisAlignment.CENTER),
+                        bgcolor=AppTheme.STATUS_SUCCESS, color=AppTheme.WHITE, height=40, expand=True,
+                        on_click=lambda _,h=hospital: page.launch_url(hospital_finder.get_call_url(h.get('phone', ''))),
+                        style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=10))
+                    ),
+                    ft.ElevatedButton(
+                        content=ft.Row([ft.Icon(Icons.DIRECTIONS, size=18, color=AppTheme.WHITE),
+                                       ft.Text("Directions", size=13, weight=ft.FontWeight.BOLD)],
+                                      spacing=6, alignment=ft.MainAxisAlignment.CENTER),
+                        bgcolor=AppTheme.ACCENT, color=AppTheme.WHITE, height=40, expand=True,
+                        on_click=lambda _,h=hospital: page.launch_url(hospital_finder.get_directions_url(h, user_location)),
+                        style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=10))
+                    )
+                ], spacing=10)
+            ]),
+            bgcolor=AppTheme.WHITE, padding=18, border_radius=14,
+            border=ft.border.all(1, AppTheme.BORDER),
+            shadow=ft.BoxShadow(spread_radius=0, blur_radius=12, color=AppTheme.SHADOW_SM, offset=ft.Offset(0, 3))
+        )
+    
+    def search_hospitals(e=None):
+        """Search for hospitals based on filters"""
+        selected_city = city_dropdown.value
+        sort_by = sort_dropdown.value
+        
+        results = hospital_finder.find_nearby_hospitals(
+            disease_name=disease_name, user_coords=user_location,
+            city=selected_city, max_distance=50.0, sort_by=sort_by
+        )
+        
+        hospitals_column.controls.clear()
+        
+        if results:
+            status_text.value = f"Found {len(results)} hospital(s) for {disease_name}"
+            status_text.color = AppTheme.STATUS_SUCCESS
+            for hospital in results[:10]:
+                hospitals_column.controls.append(create_hospital_card(hospital))
+        else:
+            status_text.value = f"No hospitals found in {selected_city}"
+            status_text.color = AppTheme.STATUS_CRITICAL
+            hospitals_column.controls.append(
+                ft.Container(
+                    content=ft.Column([
+                        ft.Icon(Icons.SEARCH_OFF, size=60, color=AppTheme.TEXT_TERTIARY),
+                        ft.Text("No Results", size=20, weight=ft.FontWeight.BOLD, color=AppTheme.TEXT_PRIMARY),
+                        ft.Text("Try selecting a different city", size=14, color=AppTheme.TEXT_SECONDARY)
+                    ], horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=10),
+                    padding=40, alignment=ft.alignment.center
+                )
+            )
+        page.update()
+    
+    # Initial search
+    search_hospitals()
+    
+    return ft.Container(
+        content=ft.Column([
+            # Header
+            ft.Container(
+                content=ft.Row([
+                    ft.IconButton(icon=Icons.ARROW_BACK_ROUNDED, icon_color=AppTheme.WHITE, icon_size=28,
+                                 on_click=lambda _: navigate_to("result"),
+                                 style=ft.ButtonStyle(overlay_color=AppTheme.PRIMARY_DARK)),
+                    ft.Column([
+                        ft.Text("Nearby Hospitals", size=20, weight=ft.FontWeight.BOLD, color=AppTheme.WHITE),
+                        ft.Text(f"For {disease_name}", size=12, color=AppTheme.WHITE + "CC")
+                    ], spacing=2)
+                ], spacing=8),
+                bgcolor=AppTheme.PRIMARY, padding=18,
+                shadow=ft.BoxShadow(spread_radius=0, blur_radius=12, color=AppTheme.SHADOW_MD, offset=ft.Offset(0, 3))
+            ),
+            
+            # Filters
+            ft.Container(
+                content=ft.Column([
+                    ft.Container(
+                        content=ft.Row([
+                            ft.Icon(Icons.MY_LOCATION_ROUNDED, size=20, color=AppTheme.PRIMARY),
+                            ft.Text(f"Location: {user_city if user_city else 'Select city below'}",
+                                   size=14, weight=ft.FontWeight.W_600, color=AppTheme.TEXT_PRIMARY)
+                        ], spacing=10),
+                        bgcolor=AppTheme.SURFACE, padding=12, border_radius=10
+                    ),
+                    ft.Container(height=12),
+                    ft.Row([city_dropdown]),
+                    ft.Row([
+                        sort_dropdown,
+                        ft.ElevatedButton(
+                            content=ft.Row([ft.Icon(Icons.SEARCH_ROUNDED, size=20, color=AppTheme.WHITE),
+                                           ft.Text("Search", size=14, weight=ft.FontWeight.BOLD)],
+                                          alignment=ft.MainAxisAlignment.CENTER, spacing=8),
+                            bgcolor=AppTheme.PRIMARY, color=AppTheme.WHITE, height=50, expand=True,
+                            on_click=search_hospitals,
+                            style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=12))
+                        )
+                    ], spacing=10),
+                    ft.Container(height=8),
+                    ft.Row([ft.Icon(Icons.INFO_OUTLINE, size=16, color=AppTheme.TEXT_TERTIARY), status_text], spacing=6)
+                ]),
+                bgcolor=AppTheme.WHITE, padding=16,
+                border=ft.border.only(bottom=ft.BorderSide(1, AppTheme.BORDER))
+            ),
+            
+            # Hospitals list
+            ft.Container(content=hospitals_column, expand=True, padding=16, bgcolor=AppTheme.BACKGROUND)
+        ], spacing=0, expand=True),
         expand=True
     )

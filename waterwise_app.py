@@ -8,11 +8,22 @@ from diagnosis_engine import DiagnosisEngine
 # MAIN APP
 # ========================================
 def main(page: ft.Page):
-    # Page configuration
+    # Page configuration - Mobile-first
     page.title = "WaterWise - Water-borne Disease Detection"
     page.theme_mode = ft.ThemeMode.LIGHT
     page.padding = 0
     page.scroll = None
+    
+    # Window sizing for better mobile simulation
+    page.window_width = 420
+    page.window_height = 800
+    page.window_resizable = True
+    
+    # Mobile optimizations
+    page.fonts = {
+        "Inter": "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    }
+    page.theme = ft.Theme(font_family="Inter")
     
     # Load disease data
     diseases_data = load_diseases_data()
@@ -38,6 +49,8 @@ def main(page: ft.Page):
             page.add(create_learn_page(page, navigate_to))
         elif route == "about":
             page.add(create_about_page(page, navigate_to))
+        elif route == "hospitals":
+            page.add(create_hospital_finder_page(page, navigate_to, app_state))
         
         page.update()
     

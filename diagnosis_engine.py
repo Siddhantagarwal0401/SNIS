@@ -2,37 +2,49 @@ import json
 from typing import List, Dict
 
 # ========================================
-# COLOR THEME CONSTANTS
+# PROFESSIONAL COLOR THEME
 # ========================================
 class AppTheme:
-    # Primary Colors - More vibrant and modern
-    PRIMARY_TEAL = "#0891B2"  # Cyan-600
-    PRIMARY_TEAL_DARK = "#0E7490"  # Cyan-700
-    PRIMARY_TEAL_LIGHT = "#06B6D4"  # Cyan-500
-    DEEP_BLUE = "#0C4A6E"  # Sky-900
-    LIGHT_AQUA = "#ECFEFF"  # Cyan-50
-    CYAN_HIGHLIGHT = "#22D3EE"  # Cyan-400
-    ACCENT_BLUE = "#3B82F6"  # Blue-500
+    # Primary - Medical Blue Palette
+    PRIMARY = "#2563EB"  # Professional Blue
+    PRIMARY_DARK = "#1E40AF"
+    PRIMARY_LIGHT = "#3B82F6"
+    PRIMARY_GRADIENT_START = "#2563EB"
+    PRIMARY_GRADIENT_END = "#7C3AED"
     
-    # Urgency Colors - More vibrant
-    URGENCY_HIGH = "#EF4444"  # Red-500
-    URGENCY_MEDIUM = "#F59E0B"  # Amber-500
-    URGENCY_LOW = "#10B981"  # Emerald-500
+    # Accent Colors
+    ACCENT = "#8B5CF6"  # Purple accent
+    ACCENT_TEAL = "#14B8A6"  # Teal
+    ACCENT_EMERALD = "#10B981"
     
-    # Background Colors
+    # Medical Status Colors
+    STATUS_CRITICAL = "#DC2626"
+    STATUS_WARNING = "#F59E0B"
+    STATUS_SUCCESS = "#10B981"
+    STATUS_INFO = "#3B82F6"
+    
+    # Neutral Palette
     WHITE = "#FFFFFF"
-    OFF_WHITE = "#F8FAFC"  # Slate-50
-    LIGHT_GREEN = "#ECFDF5"  # Emerald-50
-    SOFT_GRAY = "#F1F5F9"  # Slate-100
+    BACKGROUND = "#F8FAFC"  # Slate-50
+    SURFACE = "#F1F5F9"  # Slate-100
+    CARD = "#FFFFFF"
     
-    # Text Colors
+    # Text Hierarchy
     TEXT_PRIMARY = "#0F172A"  # Slate-900
     TEXT_SECONDARY = "#475569"  # Slate-600
-    TEXT_MUTED = "#94A3B8"  # Slate-400
+    TEXT_TERTIARY = "#94A3B8"  # Slate-400
+    TEXT_DISABLED = "#CBD5E1"  # Slate-300
     
-    # Shadow
-    SHADOW_COLOR = "#00000015"
-    SHADOW_MEDIUM = "#00000025"
+    # Borders & Dividers
+    BORDER = "#E2E8F0"  # Slate-200
+    BORDER_FOCUS = "#2563EB"
+    DIVIDER = "#F1F5F9"
+    
+    # Shadows (premium depth)
+    SHADOW_SM = "#0000000A"
+    SHADOW_MD = "#00000012"
+    SHADOW_LG = "#0000001A"
+    SHADOW_XL = "#00000025"
     SHADOW_STRONG = "#00000035"
 
 
@@ -98,11 +110,11 @@ class DiagnosisEngine:
         """Return color based on urgency level"""
         urgency_lower = urgency.lower()
         if urgency_lower == "immediate" or urgency_lower == "critical":
-            return AppTheme.URGENCY_HIGH
+            return AppTheme.STATUS_CRITICAL
         elif urgency_lower == "high":
-            return AppTheme.URGENCY_MEDIUM
+            return AppTheme.STATUS_WARNING
         else:
-            return AppTheme.URGENCY_LOW
+            return AppTheme.STATUS_SUCCESS
 
 
 # ========================================
